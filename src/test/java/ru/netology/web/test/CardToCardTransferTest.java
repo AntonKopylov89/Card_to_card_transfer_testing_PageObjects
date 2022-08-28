@@ -81,12 +81,26 @@ public class CardToCardTransferTest {
     }
 
     @Test
-    void shouldTransferFromSecondCardToFirstFractionalAmount() {
+    void shouldTransferFromSecondCardToFirstFractionalAmountMore1000RUB() {
         var dashboardPage = new DashboardPage();
         dashboardPage.firstCardButtonClick();
         var transactionPage = new TransactionPage();
         transactionPage.getToField().shouldHave(attribute("value", "**** **** **** 0001"));
         var amount = 3500.50;
+        transactionPage.validTransaction(String.valueOf(amount), DataHelper.getSecondCard().getNumber());
+        var firstCardBalance = dashboardPage.getCardBalance(DataHelper.getFirstCard().getDataTestId());
+        var secondCardBalance = dashboardPage.getCardBalance(DataHelper.getSecondCard().getDataTestId());
+        assertEquals(10000 + amount, firstCardBalance);
+        assertEquals(10000 - amount, secondCardBalance);
+    }
+
+    @Test
+    void shouldTransferFromSecondCardToFirstFractionalAmountLess1000RUB() {
+        var dashboardPage = new DashboardPage();
+        dashboardPage.firstCardButtonClick();
+        var transactionPage = new TransactionPage();
+        transactionPage.getToField().shouldHave(attribute("value", "**** **** **** 0001"));
+        var amount = 350.50;
         transactionPage.validTransaction(String.valueOf(amount), DataHelper.getSecondCard().getNumber());
         var firstCardBalance = dashboardPage.getCardBalance(DataHelper.getFirstCard().getDataTestId());
         var secondCardBalance = dashboardPage.getCardBalance(DataHelper.getSecondCard().getDataTestId());
